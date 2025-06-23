@@ -2,8 +2,8 @@ name: Android CI Build
 
 on:
   push:
-    branches: [ "main", "master" ] # 當推送到主分支時觸發
-  workflow_dispatch: # 允許手動觸發
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,10 +11,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      # 將 checkout action 更新到 v4
+      uses: actions/checkout@v4
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      # 將 setup-java action 更新到 v4
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -24,10 +26,13 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug # 或 assembleRelease
+      run: ./gradlew assembleDebug
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      # 關鍵修正：將 upload-artifact action 從 v3 更新到 v4
+      uses: actions/upload-artifact@v4
       with:
-        name: app-debug-apk # 成品名稱
-        path: app/build/outputs/apk/debug/app-debug.apk # APK 的路徑
+        name: app-debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+        # v4 版本建議加上 retention-days 來設定產物的保留天數
+        retention-days: 5
